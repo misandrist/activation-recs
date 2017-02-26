@@ -1,0 +1,5 @@
+PROJECT_NAME = Lehmer Permutation Codes
+PROJECT_BRIEF = Examples of using the Lehmer algorithms to encode permutations.
+EXTRACT_PACKAGE = YES
+EXTRACT_STATIC = YES
+EXTRACT_ANON_NSPACES = YES
