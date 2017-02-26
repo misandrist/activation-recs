@@ -1,4 +1,4 @@
-/*! \mainpage C++ example of the Lehman permutation algorithm.
+/** \mainpage C++ example of the Lehman permutation algorithm.
  *
  * (C) 2017 Claire Cavanaugh
 
@@ -31,7 +31,7 @@ void perm_print(const nats &a, indices &p);
 void lehmer(indices &p, nat c);
 
 int main() {
-    nats a = {1, 2, 3, 4};
+    nats a = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     perms(a);
     return 0;
 }
