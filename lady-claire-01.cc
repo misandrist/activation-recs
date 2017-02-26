@@ -71,6 +71,20 @@ fact_t factoral_flat(fact_t n) {
             if (f.n <= 1)
                 ret = 1;
             else {
+                // Professor's comments:
+                //
+                // You are pushing two stack frames corresponding to
+                // the recursive calls, but you don't add the return
+                // values anywhere. You're going to have to save the
+                // return value from the first call while you do the
+                // second, and then after returning from the second,
+                // add the two return values to become the return
+                // value for your current call. So you will need to
+                // remember at least three locations: about to do
+                // first call,between two calls, after both calls. And
+                // you will need to put have another lint on your
+                // stack frame to remember the return value from the
+                // first call.
                 f.loc = 1; s.push(f);
                 fact_frame g; g.n = f.n - 1; g.loc = 0;
                 s.push(g);
