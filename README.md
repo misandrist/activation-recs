@@ -44,3 +44,17 @@ and, with regard to activation records:
 > global variables). In that case, you could just push both frames on
 > the stack before continuing your loop. (See the Tower of Hanoi
 > example from the book.)
+
+## The 6502 Model
+
+Calculate the Fibonacci of n using the 6502 execution model.
+
+The "6502 model" has:
+- A general purose register, the accumulator:
+  $$a$$
+- Two index registers:
+  $$\{x, y\}$$
+- A stack pointer
+  $${sp}$$
+- Push and Pop for the accumulator:
+  $$\{{PHA}, {PLA}\}$$

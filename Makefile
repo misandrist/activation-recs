@@ -14,3 +14,4 @@ clean:
 	rm -f $(NAMES)
 
 flat-fib: CXXFLAGS += -lgmp -lgmpxx
+computionist-6502-01: CXXFLAGS += -lgmp -lgmpxx
