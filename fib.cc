@@ -17,18 +17,13 @@ fib_t fib(fib_t n) {
 
     fs.push(0);
     fs.push(1);
-
-    while (n > 1) {
-        n -= 1;
-
-        fib_t l = fs.top();
-        fs.pop();
-        fib_t k= fs.top();
-        fs.pop();
-
-        fs.push(l);
-        fs.push(k + l);
+    fib_t l = 1;
+    for (fib_t i=2; i<n; i++) {
+        fs.push(fs.top() + l);
+        l = fs.top();
     }
+
+    cout << "Stack size: " << fs.size() << endl;
     return fs.top();
 }
 
