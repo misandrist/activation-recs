@@ -7,5 +7,6 @@ NAMES = factoradic fib
 
 all: $(NAMES)
 
+fib: CXXFLAGS += -lgmp -lgmpxx
 clean:
 	rm -f $(NAMES)
