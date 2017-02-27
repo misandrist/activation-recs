@@ -24,13 +24,13 @@ private:
     stack<T> _st;
 
     // Zero flag
-    T _z;
+    bool _z;
 
     // Overflow flag
-    T _v;
+    bool _v;
 
     // Minus flag
-    T _m;
+    bool _m;
 
     // Set the flags based on the value.
     void _set_flags(const T &n);
@@ -47,6 +47,9 @@ public:
     T sta() const;
     T stx() const;
     T sty() const;
+
+    // Add with carry from memory to (a).
+    void adc(const T &v);
 
     void tax();
     void tay();
@@ -132,6 +135,14 @@ T pregs<T>::sty() const {
 }
 
 template <typename T>
+void pregs<T>::adc(const T &v) {
+    T v0(_a);
+    _a += v;
+
+    _set_flags(_a, _a >= v);
+}
+
+template <typename T>
 void pregs<T>::tax() {
     _x = _a;
     _set_flags(_x);
@@ -187,6 +198,7 @@ void pregs<T>::dey() {
 template <typename T>
 void pregs<T>::pha() {
     _st.push(_a);
+    _set_flags(_a);
 }
 
 template <typename T>
@@ -220,9 +232,8 @@ bool pregs<T>::mi() const {
 
 template <typename T>
 bool pregs<T>::pl() const {
-    return _m;
+    return !_m;
 }
-
 
 // Calculate the non-tail-recursive Fibonacci of n using the 6502
 // execution model.
@@ -235,30 +246,57 @@ fib_t fib(const fib_t &n) {
     if (n <= 1)
         return n;
 
-    // Otherwise, return f (n - 1) + f (n - 2)
+    // Otherwise, calculate fib(n) using fib n = fib (n - 1)  + fib (n - 2)
 
     // Load n into x
-    regs.ldx(n);
-
-    regs.cpx(2);
     // While x >= 2:
-    while (regs.pl()) {
-        // Decrement x and push activation record for f(n - 1)
+    regs.ldx(n);
+    do {
+        // Push activation record for fib (n - 1)
         regs.dex();
-
         regs.txa();
         regs.pha();
 
-        // Decrement x and push activation record for f(n - 2)
+        // Decrement x and push activation record for fib (n - 2)
         regs.dex();
-
-        // Push activation record for f(n - 2)
         regs.txa();
         regs.pha();
-    }
+
+        regs.cpx(2);
+    } while (regs.pl());
 
     // All activation records have been pushed, so now we start
-    // popping and evaluating.
+    // popping and evaluating. This is exactly the same loop as above,
+    // but doing the reduction instead of the expansion.
+
+    // Our memory location. Pretend it's initialized.
+    fib_t m(0);
+
+    // Reload x so we know when to stop.
+    regs.ldx(n);
+    do {
+        // Decrement x and pop activation record.
+        regs.dex();
+        regs.pla();
+
+        // (a) now holds the current activation record. Now we have to
+        // add it to our running total in (m).
+        regs.adc(m);
+        m = regs.sta();
+
+        // Pop the next activation record, add it to our running
+        // total.
+        regs.dex();
+        regs.pla();
+        regs.adc(m);
+        m = regs.sta();
+
+        // Check for our termination condition, i.e. x < 2.
+        regs.cpx(2);
+    } while(regs.pl());
+
+    // At this point, m should have fib(n)
+    return m;
 }
 
 int main() {
